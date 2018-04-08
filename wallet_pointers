@@ -1,4 +1,4 @@
-C1: wss://gtg.steem.house:8090
-C2: wss://steemd.minnowsupportproject.org
-E1: wss://steemd.privex.io
-E2: wss://rpc.steemliberator.com
+C1: wss://rpc.buildteam.io
+C2: wss://gtg.steem.house:8090
+E1: wss://steemd.minnowsupportproject.org
+E2: wss://steemd.privex.io
