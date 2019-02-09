@@ -1,7 +1,7 @@
 B1
-1: wss://rpc.steemviz.com
-2: wss://rpc.curiesteem.com
+1: wss://steemd.privex.io
+2: wss://appbasetest.timcliff.com
 
 B2
-1: wss://gtg.steem.house:8090
-2: wss://steemd.privex.io
+1: wss://appbasetest.timcliff.com
+2: wss://wallet.steem.ws
