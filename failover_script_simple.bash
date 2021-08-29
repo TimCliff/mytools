@@ -1,15 +1,16 @@
 #!/bin/bash
 
 account="timcliff"
-init_misses=85  #witness current total_misses count
-misses_failover_count=6   #misses count threshold for failing over to backup pubkey
-backup_pub_signing_key=TODO
+init_misses=2238  #witness current total_misses count
+misses_failover_count=5   #misses count threshold for failing over to backup pubkey
+backup_pub_signing_key=STM1111111111111111111111111111111114T1Anm
 wallet="http://127.0.0.1:8092/rpc"  #steemd's rpc
 wallet_passphrase="TODO"
-props='{"account_creation_fee":"0.100 STEEM","maximum_block_size":65536,"sbd_interest_rate":0}'
-witness_url="https://steemit.com/witness-category/@timcliff/timcliff-s-updated-witness-application"  #edit to match your witness URL/CV
-
-##
+props='{"account_creation_fee":"3.000 HIVE","maximum_block_size":65536,"hbd_interest_rate":1000}'
+witness_url="https://peakd.com/witness-category/@timcliff/timcliff-s-updated-witness-application"  #edit to match your witness URL/CV
+email_to="TODO@PHONE.com"
+email_from="TODO@hotmail.com"
+email_pw="TODO"
 
 function check_misses {
   misses="$(curl --data-ascii '{"id":0,"method":"get_witness","params":["'"$account"'"]}' \
@@ -31,7 +32,7 @@ if [ $(($misses-$init_misses)) -ge $misses_failover_count ] ; then
    curl -H "content-type: application/json" -X POST -d "{\"id\":0,\"method\":\"unlock\",\"params\":[\"$wallet_passphrase\"]}" $wallet
    curl -H "content-type: application/json" -X POST -d "{\"id\":0,\"method\":\"update_witness\",\"params\":[\"$account\",\"$witness_url\",\"$backup_pub_signing_key\",$props,true]}" $wallet 2>/dev/null
    curl -H "content-type: application/json" -X POST -d "{\"id\":0,\"method\":\"lock\",\"params\":[]}" $wallet
-   sendemail -f TODO@hotmail.com -t TODO@PHONE.com -u subject -m "Witness Missing Blocks" -s smtp.live.com -o tls=yes -xu TODO@hotmail.com -xp PWTODO
+   sendemail -f $email_from -t $email_to -u subject -m "Witness Missing Blocks" -s smtp.live.com -o tls=yes -xu $email_from -xp $email_pw
    exit 2
 fi
 echo "[`date`] no failover"
