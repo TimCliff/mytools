@@ -26,19 +26,15 @@ wallet=http://127.0.0.1:8092/rpc
 usage () {
     cat 1>&2 <<__EOU__
 Usage: $0 -w|--witness <witness> [-m|--min <min-price>] [-M|--max <max-price>] [-r|--rpc-url <rpc-url>]
-[-v|--vote]
--w sets the name of the witness whose price will be set (and optionally voted
-   from).
+-w sets the name of the witness whose price will be set.
 -m and -M set the absolute maximum and minimum acceptable price. This script
    will exit if the actual price exceeds these bounds. Defaults are $min_bound
    and $max_bound, respectively.
 -r specifies the cli_wallet's HTTP-RPC URL. The default is $wallet.
--v will make the given witness vote for the creators of this script, i. e.
-   cyrano.witness and steempty. If you have already voted you'll see an error
-   message if you vote again. That can be ignored.
+
 
 Hint: for slightly better security you should keep the cli_wallet locked at all
-times. In order to vote, this program needs to unlock the wallet. For this,
+times. This program needs to unlock the wallet. For this,
 create a file named "lock" in the current directory with read permission only
 for yourself, and paste the following JSON-RPC command into the "lock" file:
 {"id":0,"method":"unlock","params":["<your_password>"]}
@@ -63,27 +59,18 @@ relock () {
     fi
 }
 
-vote () {
-    unlock
-    curl -s --data-ascii '{"method":"vote_for_witness","params":["'"$account"'","cyrano.witness",true,true],"jsonrpc":"2.0","id":0}' "$wallet"
-    curl -s --data-ascii '{"method":"vote_for_witness","params":["'"$account"'","steempty",true,true],"jsonrpc":"2.0","id":0}' "$wallet"
-    relock
-}
-
 while [ $# -gt 0 ]; do
     case "$1" in
         -w|--witness) account="$2";   shift; ;;
         -m|--min)     min_bound="$2"; shift; ;;
         -M|--max)     max_bound="$2"; shift; ;;
         -r|--rpc-url) wallet="$2";    shift; ;;
-        -v|--vote)    vote=yes;       ;;
         *)            usage;          ;;
     esac
     shift
 done
 
 if [ -z "$account" ]; then usage; fi
-if [ "$vote" = yes ]; then vote; fi
 
 # Avoid problems with decimal separator
 export LANG=C
@@ -92,26 +79,26 @@ get_wallet_price () {
     curl --data-ascii '{"id":0,"method":"get_witness","params":["'"$account"'"]}' \
          -s "$wallet" \
       | sed "s=[{,]=&$'\n'=g" \
-      | grep -A 2 'sbd_exchange_rate' \
+      | grep -A 2 'hbd_exchange_rate' \
       | grep '"base"' \
       | cut -d\" -f 4 \
-      | sed 's= SBD==;s= STEEM=='
+      | sed 's= HBD==;s= HIVE=='
 }
 
 get_last_update () {
     local jtime="$(curl --data-ascii '{"id":0,"method":"get_witness","params":["'"$account"'"]}' \
                         -s "$wallet" \
                      | sed "s=[{,]=&$'\n'=g" \
-                     | grep '"last_sbd_exchange_update"' \
+                     | grep '"last_hbd_exchange_update"' \
                      | cut -d\" -f 4 \
-                     | sed 's= SBD==;s= STEEM==')"
+                     | sed 's= HBD==;s= HIVE==')"
     date --date "${jtime}Z" +%s
 }
 
 #function get_price {
 #  while true ; do
 #    while true ; do
-#       price_fetch=`curl -s https://api.cryptonator.com/api/full/steem-usd 2>/dev/null`
+#       price_fetch=`curl -s https://api.cryptonator.com/api/full/hive-usd 2>/dev/null`
 #       [ $? -eq 0 ] && break
 #       sleep 1m
 #    done
@@ -133,12 +120,12 @@ get_last_update () {
 function get_price {
   while true ; do
     while true ; do
-       price_fetch=`curl -s https://bittrex.com/api/v1.1/public/getticker?market=BTC-STEEM 2>/dev/null`
+       price_fetch=`curl -s https://bittrex.com/api/v1.1/public/getticker?market=BTC-HIVE 2>/dev/null`
        [ $? -eq 0 ] && break
        sleep 1m
     done
-    steem_price="$(printf "%0.8f" "$(echo $price_fetch | tr , "\n" | grep '"Last"' | cut -d: -f 2 | cut -d} -f 1 )")"
-    if [[ "$steem_price" = *[[:digit:]]* ]] ; then
+    hive_price="$(printf "%0.8f" "$(echo $price_fetch | tr , "\n" | grep '"Last"' | cut -d: -f 2 | cut -d} -f 1 )")"
+    if [[ "$hive_price" = *[[:digit:]]* ]] ; then
       break
     fi
     sleep 1m
@@ -157,7 +144,7 @@ function get_price {
     sleep 1m
   done
 
-calc_price=$(echo "${btc_price}*${steem_price}" |bc)
+calc_price=$(echo "${btc_price}*${hive_price}" |bc)
 
   # reduction of percentage from feed
 price="$(printf "%0.3f" "$(echo $calc_price)")"
@@ -208,7 +195,7 @@ last_feed="`get_last_update`"
     last_feed="$now"
     unlock
     echo "sending feed ${price_permillage}/10% price: $price"
-    curl --data-ascii '{"method":"publish_feed","params":["'"$account"'",{"base":"'"$price"' SBD","quote":"1.000 STEEM"},true],"jsonrpc":"2.0","id":0}' \
+    curl --data-ascii '{"method":"publish_feed","params":["'"$account"'",{"base":"'"$price"' HBD","quote":"1.000 HIVE"},true],"jsonrpc":"2.0","id":0}' \
          -s "$wallet"
     relock
 #  fi
