@@ -89,9 +89,7 @@ def store(filename, data, sheet_name='Sheet1'):
     data["buy_asset"] = buy_asset2
     data["sell_asset"] = sell_asset2
     df = pd.DataFrame(data)
-    writer = pd.ExcelWriter(filename, engine='xlsxwriter')
-    df.to_excel(writer, sheet_name=sheet_name, startrow=0, header=True, index=False)   
-    writer.save()    
+    pd.to_csv(filename)
 
 if __name__ == "__main__":
     nodelist = NodeList()
