@@ -89,7 +89,7 @@ def store(filename, data, sheet_name='Sheet1'):
     data["buy_asset"] = buy_asset2
     data["sell_asset"] = sell_asset2
     df = pd.DataFrame(data)
-    pd.to_csv(filename)
+    df.to_csv(filename)
 
 if __name__ == "__main__":
     nodelist = NodeList()
