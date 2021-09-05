@@ -11,7 +11,7 @@ import pandas as pd
 
 #account_name = "timcliff"
 account_name = "artist1989"
-current_year = 2020
+current_year = 2021
 
 def init():
     data = {'exchange_name': [],
