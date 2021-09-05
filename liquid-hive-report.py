@@ -107,7 +107,7 @@ if __name__ == "__main__":
     hive_fork_block = 41818753
     has_fork = True
     limit_to_year = True
-    xls_filename = "%s_%d.xlsx" % (data_account_name, current_year)
+    xls_filename = "%s_%d.csv" % (data_account_name, current_year)
     
     account = Account(account_name, blockchain_instance=stm)
     ops_dict = {}
