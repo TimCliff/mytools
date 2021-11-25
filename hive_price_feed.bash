@@ -117,14 +117,24 @@ get_last_update () {
 #  echo "0${price}"
 #}
 
+#price_fetch=`curl -s https://bittrex.com/api/v1.1/public/getticker?market=BTC-HIVE 2>/dev/null`
+#hive_price="$(printf "%0.8f" "$(echo $price_fetch | tr , "\n" | grep '"Last"' | cut -d: -f 2 | cut -d} -f 1 )")"
+#echo $hive_price
+
+#price_fetch=`curl -s https://api.binance.com/api/v1/ticker/price?symbol=HIVEBTC 2>/dev/null`
+#hive_price="$(echo $price_fetch | tr , "\n" | grep '"price"' | cut -d: -f 2 | cut -d} -f 1 | sed -e 's/^"//' -e 's/"$//')"
+#echo $hive_price
+
 function get_price {
   while true ; do
     while true ; do
-       price_fetch=`curl -s https://bittrex.com/api/v1.1/public/getticker?market=BTC-HIVE 2>/dev/null`
+       #price_fetch=`curl -s https://bittrex.com/api/v1.1/public/getticker?market=BTC-HIVE 2>/dev/null`
+       price_fetch=`curl -s https://api.binance.com/api/v1/ticker/price?symbol=HIVEBTC 2>/dev/null`
        [ $? -eq 0 ] && break
        sleep 1m
     done
-    hive_price="$(printf "%0.8f" "$(echo $price_fetch | tr , "\n" | grep '"Last"' | cut -d: -f 2 | cut -d} -f 1 )")"
+    #hive_price="$(printf "%0.8f" "$(echo $price_fetch | tr , "\n" | grep '"Last"' | cut -d: -f 2 | cut -d} -f 1 )")"
+    hive_price="$(echo $price_fetch | tr , "\n" | grep '"price"' | cut -d: -f 2 | cut -d} -f 1 | sed -e 's/^"//' -e 's/"$//')"
     if [[ "$hive_price" = *[[:digit:]]* ]] ; then
       break
     fi
