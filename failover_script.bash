@@ -33,7 +33,7 @@ if [ $(($misses-$init_misses)) -ge $misses_failover_count ] ; then
       curl -H "content-type: application/json" -X POST -d "{\"id\":0,\"method\":\"unlock\",\"params\":[\"$wallet_passphrase\"]}" $wallet
       curl -H "content-type: application/json" -X POST -d "{\"id\":0,\"method\":\"update_witness\",\"params\":[\"$account\",\"$witness_url\",\"$backup_pub_signing_key\",$props,true]}" $wallet 2>/dev/null
       curl -H "content-type: application/json" -X POST -d "{\"id\":0,\"method\":\"lock\",\"params\":[]}" $wallet
-      sendemail -f TODO -t TODO -u subject -m "Witness Missing Blocks" -s smtp.live.com -o tls=yes -xu TODO -xp TODO
+      sendemail -f TODO -t TODO -u subject -m "Witness Missing Blocks" -s smtp-mail.outlook.com -o tls=yes -xu TODO -xp TODO
       exit 2
    fi
 fi
