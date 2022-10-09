@@ -16,10 +16,9 @@ tags=["hbd"]
 beneficiaries=[{'account': "hbdstabilizer", 'weight': 10000}]
 body="The rewards for this comment are set to 100% beneficiary going to the @hbdstabilizer account."
 
-h = Hive(keys=[hive_key])
-#hive.wallet.unlock("wallet-passphrase")
+h = Hive(keys=[hive_key], node=["https://anyx.io", "https://api.deathwing.me"])
 
-for x in range(0, 10):
+for x in range(0, 11):
    print("posting (" + str(x)+ ")")
 
    tx = h.post(title=title, body=body, author=author,
@@ -30,6 +29,6 @@ for x in range(0, 10):
 
    print(tx)
 
-   time.sleep(10)  # can only post once per block. give extra time in case of error.
+   time.sleep(60)  # can only post once per block. give extra time in case of error.
 
 print("done")
