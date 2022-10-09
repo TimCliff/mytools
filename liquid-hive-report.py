@@ -9,9 +9,9 @@ from beem.block import Block
 from beem.nodelist import NodeList
 import pandas as pd
 
-#account_name = "timcliff"
-account_name = "artist1989"
-current_year = 2021
+account_name = "timcliff"
+#account_name = "artist1989"
+current_year = 2022
 
 def init():
     data = {'exchange_name': [],
