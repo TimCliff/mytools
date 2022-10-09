@@ -121,6 +121,7 @@ get_last_update () {
 #hive_price="$(printf "%0.8f" "$(echo $price_fetch | tr , "\n" | grep '"Last"' | cut -d: -f 2 | cut -d} -f 1 )")"
 #echo $hive_price
 
+
 #price_fetch=`curl -s https://api.binance.com/api/v1/ticker/price?symbol=HIVEBTC 2>/dev/null`
 #hive_price="$(echo $price_fetch | tr , "\n" | grep '"price"' | cut -d: -f 2 | cut -d} -f 1 | sed -e 's/^"//' -e 's/"$//')"
 #echo $hive_price
