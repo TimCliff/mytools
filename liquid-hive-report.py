@@ -11,7 +11,7 @@ import pandas as pd
 
 account_name = "timcliff"
 #account_name = "artist1989"
-current_year = 2022
+current_year = 2024
 
 def init():
     data = {'exchange_name': [],
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     account = Account(account_name, blockchain_instance=stm)
     ops_dict = {}
     _ids = {}
-    for ops in account.history(only_ops=["transfer"]):
+    for ops in account.history(only_ops=["transfer", "fill_vesting_withdraw"]):
         ops_dict[ops["index"]] = ops
         if ops["_id"] in _ids:
             _ids[ops["_id"]] += 1
